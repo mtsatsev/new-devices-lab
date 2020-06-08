@@ -1,4 +1,4 @@
-# My humble attempt to implement gesture recognition algorithm with a simple camera 
+# My humble attempt to implement gesture recognition algorithm with a simple camera
 
 ## Requirements
 
@@ -60,6 +60,7 @@ def read_dataset(folder):
         img = convert_image_into_binary_image(img)
         img = np.array(img).reshape(9600)
         train_data.append(img)
+    train_data = np.array(train_data)
     return train_data
 ```
 4. Do this for all folders in the raw data downloaded in ```1``` and add labels to the images. Practically calling ```read_dataset``` many times and concatenating the resulting arrays. Automate the process as much as possible for personal comfort and convenience.
@@ -67,16 +68,17 @@ def read_dataset(folder):
 ```python
 def create_dataset(folders):
     p = "leapGestRecog/"
-    dataset = []
-    n = 200
+    dataset = np.array([])
     for k in range(10):
         folder = folders[k]
         for i in range(10):
             data = read_dataset(p+"0"+str(i)+"/"+folder)
-            for j in range(n):
-                _data = np.append(data[j],[str(i-1)])
-            dataset.append(_data)
-            print("One folder is ready " + str(100 - ((1 + k)*(1+i))) + " left")
+            data = np.insert(data,data.shape[1],[str(i)],axis=1)
+            if k == 0 and i == 0:
+                dataset = data
+            else:
+                dataset = np.concatenate((dataset,data))
+                print("Step: [{},{}]".format(outher_folder*inner_folder, (k * inner_folder) + i + 1))
     return dataset
 ```
 

@@ -34,6 +34,7 @@ def read_dataset(folder):
         img = convert_image_into_binary_image(img)
         img = np.array(img).reshape(9600)
         train_data.append(img)
+    train_data = np.array(train_data)
     return train_data
 
 def create_dataset(folders):
@@ -41,17 +42,21 @@ def create_dataset(folders):
     """ Create an array with all data points, append label and save them as array """
 
     p = "leapGestRecog/"
-    dataset = []
-    n = 200
-    for k in range(10):
+    outher_folder = 10
+    inner_folder  = 10
+    dataset = np.array([])
+    for k in range(outher_folder):
         folder = folders[k]
-        for i in range(10):
+        for i in range(inner_folder):
             data = read_dataset(p+"0"+str(i)+"/"+folder)
-            print(np.array(data[0]).shape)
-            for j in range(n):
-                _data = np.append(data[j],[str(i-1)])
-            dataset.append(_data)
+            data = np.insert(data,data.shape[1],[str(i)],axis=1)
+            if k == 0 and i == 0:
+                dataset = data
+            else:
+                dataset = np.concatenate((dataset,data))
+            print("Step: [{},{}]".format(outher_folder*inner_folder, (k * inner_folder) + i + 1))
 
+    print("final dataset shape is: " + str(dataset.shape))
     return dataset
 
 def dataloaderMain():
