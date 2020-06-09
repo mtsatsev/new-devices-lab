@@ -27,12 +27,16 @@ def find_countours(image):
 def read_dataset(folder):
     """ Read a whole folder with images, resize them and save them as array """
     train_data = []
+    x1, y1 = 0,20
+    x2, y2 = 134,60
     for file in listdir(folder):
         img = color_image_gray(folder,file)
-        img = cv2.resize(img,(int(160),int(60)))
+        img = cv2.resize(img,(int(100),int(60)))
+        cropped = img[x1:(y2 + 1), y1:(x2 + 1)]
 
-        img = convert_image_into_binary_image(img)
-        img = np.array(img).reshape(9600)
+        img = convert_image_into_binary_image(cropped)
+        img = cv2.resize(img,(int(64),int(64)))
+        img = np.array(img).reshape(4096)
         train_data.append(img)
     train_data = np.array(train_data)
     return train_data
